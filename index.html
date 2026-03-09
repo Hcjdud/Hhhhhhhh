@@ -3,37 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CineVault - Премиум кинотеатр</title>
-    <!-- Video.js для профессионального плеера -->
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
-    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
-    <!-- Font Awesome для иконок -->
+    <title>CineVault - Онлайн кинотеатр</title>
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* Все стили как в предыдущей версии - они правильные */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0f;
-            color: #ffffff;
-            line-height: 1.6;
+            background: linear-gradient(135deg, #0a0a0f 0%, #14141f 100%);
+            color: white;
+            min-height: 100vh;
         }
 
-        ::-webkit-scrollbar {
-            width: 10px;
-            background: #1a1a1f;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #e50914, #ff5e5e);
-            border-radius: 10px;
-        }
-
+        /* Хедер */
         .header {
             position: fixed;
             top: 0;
@@ -44,25 +33,21 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: all 0.4s;
-            background: linear-gradient(180deg, rgba(10,10,15,0.95) 0%, rgba(10,10,15,0.8) 100%);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(229, 9, 20, 0.2);
-        }
-
-        .header.scrolled {
-            padding: 15px 50px;
-            background: rgba(10,10,15,0.98);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: rgba(10,10,15,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #e50914;
+            box-shadow: 0 5px 20px rgba(229,9,20,0.3);
         }
 
         .logo {
             font-size: 28px;
             font-weight: 800;
-            background: linear-gradient(135deg, #e50914, #ff7b7b);
+            background: linear-gradient(135deg, #e50914, #ff6b6b);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         .nav-menu {
@@ -71,10 +56,28 @@
         }
 
         .nav-menu a {
-            color: #fff;
+            color: white;
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            position: relative;
+            padding: 5px 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #e50914;
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
         }
 
         .nav-menu a:hover,
@@ -84,13 +87,17 @@
 
         .search-bar {
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(229,9,20,0.3);
+            border: 1px solid #e50914;
             border-radius: 30px;
             padding: 10px 20px;
             width: 300px;
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        .search-bar i {
+            color: #e50914;
         }
 
         .search-bar input {
@@ -101,21 +108,32 @@
             outline: none;
         }
 
+        .search-bar input::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
         .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #e50914, #ff5e5e);
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #e50914, #ff6b6b);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            border: 2px solid white;
+            transition: transform 0.3s;
         }
 
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Hero секция */
         .hero {
             height: 600px;
             position: relative;
-            margin-top: 80px;
+            margin-top: 85px;
             overflow: hidden;
         }
 
@@ -127,6 +145,7 @@
             bottom: 0;
             background-size: cover;
             background-position: center;
+            filter: brightness(0.5);
         }
 
         .hero-backdrop::before {
@@ -136,7 +155,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(90deg, rgba(10,10,15,0.9) 0%, rgba(10,10,15,0.5) 50%, transparent 100%);
+            background: linear-gradient(90deg, #0a0a0f 0%, transparent 50%, transparent 100%);
         }
 
         .hero-content {
@@ -153,25 +172,26 @@
         }
 
         .hero-badge span {
-            background: rgba(229,9,20,0.2);
-            border: 1px solid #e50914;
+            background: #e50914;
             padding: 8px 20px;
             border-radius: 30px;
             font-size: 14px;
             font-weight: 600;
-            color: #e50914;
+            box-shadow: 0 5px 15px rgba(229,9,20,0.3);
         }
 
         .hero-title {
             font-size: 56px;
             font-weight: 800;
             margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
         }
 
         .hero-description {
             font-size: 18px;
-            color: rgba(255,255,255,0.8);
+            color: #e0e0e0;
             margin-bottom: 30px;
+            line-height: 1.6;
         }
 
         .hero-buttons {
@@ -192,16 +212,17 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            box-shadow: 0 5px 20px rgba(229,9,20,0.5);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(229,9,20,0.5);
+            box-shadow: 0 10px 30px rgba(229,9,20,0.7);
         }
 
         .btn-secondary {
             background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 2px solid #e50914;
             padding: 15px 40px;
             border-radius: 50px;
             color: white;
@@ -212,21 +233,18 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: #e50914;
+            background: rgba(229,9,20,0.2);
+            transform: translateY(-3px);
         }
 
+        /* Контент */
         .main-content {
             padding: 0 50px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .section {
-            margin-bottom: 60px;
+            margin-top: 40px;
         }
 
         .section-header {
@@ -240,69 +258,79 @@
             font-size: 28px;
             font-weight: 700;
             position: relative;
+            padding-left: 20px;
         }
 
-        .section-title::after {
+        .section-title::before {
             content: '';
             position: absolute;
-            bottom: -10px;
             left: 0;
-            width: 60px;
-            height: 4px;
+            top: 0;
+            bottom: 0;
+            width: 5px;
             background: #e50914;
-            border-radius: 2px;
+            border-radius: 5px;
         }
 
         .view-all {
             color: #e50914;
-            text-decoration: none;
-            font-weight: 500;
             cursor: pointer;
+            font-weight: 500;
+            transition: gap 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .view-all:hover {
+            gap: 15px;
         }
 
         .category-tabs {
             display: flex;
             gap: 15px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             flex-wrap: wrap;
         }
 
         .category-tab {
-            padding: 12px 30px;
+            padding: 10px 25px;
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 40px;
+            border-radius: 30px;
             cursor: pointer;
             transition: all 0.3s;
-            color: rgba(255,255,255,0.7);
+            color: #ccc;
         }
 
         .category-tab:hover {
-            background: rgba(229,9,20,0.1);
-            border-color: #e50914;
+            background: #e50914;
             color: white;
+            border-color: #e50914;
         }
 
         .category-tab.active {
             background: #e50914;
-            border-color: #e50914;
             color: white;
+            border-color: #e50914;
         }
 
+        /* Сетка фильмов */
         .movies-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 25px;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
         .movie-card {
-            background: rgba(255,255,255,0.03);
-            border-radius: 16px;
+            background: rgba(20,20,30,0.8);
+            border-radius: 15px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
-            border: 1px solid rgba(255,255,255,0.05);
+            border: 1px solid rgba(229,9,20,0.2);
+            backdrop-filter: blur(10px);
         }
 
         .movie-card:hover {
@@ -335,7 +363,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
+            background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.9) 100%);
             opacity: 0;
             transition: opacity 0.3s;
             display: flex;
@@ -357,6 +385,7 @@
             justify-content: center;
             transform: scale(0.8);
             transition: transform 0.3s;
+            box-shadow: 0 0 30px rgba(229,9,20,0.5);
         }
 
         .play-button i {
@@ -378,6 +407,7 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 700;
+            z-index: 2;
         }
 
         .movie-quality {
@@ -385,14 +415,15 @@
             bottom: 15px;
             left: 15px;
             background: rgba(0,0,0,0.8);
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-size: 11px;
             border: 1px solid #e50914;
+            z-index: 2;
         }
 
         .movie-info {
-            padding: 20px;
+            padding: 15px;
         }
 
         .movie-title {
@@ -404,7 +435,7 @@
         .movie-meta {
             display: flex;
             justify-content: space-between;
-            color: rgba(255,255,255,0.6);
+            color: #aaa;
             font-size: 14px;
         }
 
@@ -412,6 +443,7 @@
             color: #ffd700;
         }
 
+        /* Модальное окно с YouTube плеером */
         .modal {
             display: none;
             position: fixed;
@@ -419,10 +451,11 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.98);
+            background: rgba(0,0,0,0.95);
             z-index: 2000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(10px);
         }
 
         .modal.active {
@@ -435,35 +468,92 @@
             position: relative;
         }
 
-        .video-js {
+        .video-container {
+            position: relative;
             width: 100%;
-            height: 0;
             padding-bottom: 56.25%;
-            border-radius: 16px;
+            background: #000;
+            border-radius: 15px;
             overflow: hidden;
+            border: 3px solid #e50914;
+            box-shadow: 0 0 50px rgba(229,9,20,0.5);
+        }
+
+        #youtube-player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
         }
 
         .close-modal {
             position: absolute;
-            top: -40px;
+            top: -50px;
             right: 0;
             color: white;
             font-size: 30px;
             cursor: pointer;
             background: #e50914;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s;
+            border: 2px solid white;
         }
 
+        .close-modal:hover {
+            transform: rotate(90deg) scale(1.1);
+        }
+
+        .movie-info-modal {
+            position: absolute;
+            bottom: -120px;
+            left: 0;
+            right: 0;
+            background: rgba(20,20,30,0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            border: 1px solid #e50914;
+            color: white;
+        }
+
+        .movie-info-modal h2 {
+            color: #e50914;
+            margin-bottom: 10px;
+        }
+
+        .movie-info-modal p {
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .movie-meta-modal {
+            display: flex;
+            gap: 20px;
+            color: #aaa;
+        }
+
+        .movie-meta-modal span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .movie-meta-modal i {
+            color: #e50914;
+        }
+
+        /* Футер */
         .footer {
             background: #0a0a0f;
             padding: 60px 50px 30px;
-            margin-top: 60px;
-            border-top: 1px solid rgba(229,9,20,0.2);
+            margin-top: 50px;
+            border-top: 2px solid #e50914;
         }
 
         .footer-content {
@@ -476,52 +566,101 @@
 
         .footer-column h3 {
             color: #e50914;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .footer-column a {
-            color: rgba(255,255,255,0.6);
+            color: #aaa;
             text-decoration: none;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             transition: color 0.3s;
         }
 
         .footer-column a:hover {
             color: #e50914;
+            transform: translateX(5px);
         }
 
         .copyright {
             text-align: center;
-            color: rgba(255,255,255,0.4);
-            margin-top: 50px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #666;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .movie-card {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @media (max-width: 1024px) {
+            .header {
+                padding: 15px 30px;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 42px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .search-bar {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 32px;
+            }
+            
+            .main-content {
+                padding: 0 20px;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
-    <header class="header" id="header">
+    <header class="header">
         <div class="logo" onclick="scrollToTop()">CineVault</div>
         
         <nav class="nav-menu">
             <a href="#" class="active">Главная</a>
             <a href="#">Фильмы</a>
             <a href="#">Сериалы</a>
-            <a href="#">Моё</a>
+            <a href="#">Мультфильмы</a>
         </nav>
 
         <div class="search-bar">
-            <i class="fas fa-search" style="color: #e50914;"></i>
+            <i class="fas fa-search"></i>
             <input type="text" placeholder="Поиск фильмов..." id="searchInput">
         </div>
 
         <div class="user-avatar">
-            <i class="fas fa-user" style="color: white;"></i>
+            <i class="fas fa-user"></i>
         </div>
     </header>
 
-    <section class="hero" id="hero">
+    <section class="hero">
         <div class="hero-backdrop" id="heroBackdrop"></div>
         <div class="hero-content">
             <div class="hero-badge">
@@ -545,24 +684,23 @@
     </section>
 
     <div class="main-content">
-        <div class="section">
-            <div class="section-header">
-                <h2 class="section-title">Популярные фильмы</h2>
-                <span class="view-all" onclick="showAllMovies()">
-                    Все фильмы <i class="fas fa-arrow-right"></i>
-                </span>
-            </div>
-            
-            <div class="category-tabs">
-                <span class="category-tab active" onclick="filterMovies('all', this)">Все</span>
-                <span class="category-tab" onclick="filterMovies('action', this)">Боевики</span>
-                <span class="category-tab" onclick="filterMovies('drama', this)">Драмы</span>
-                <span class="category-tab" onclick="filterMovies('fantasy', this)">Фантастика</span>
-                <span class="category-tab" onclick="filterMovies('thriller', this)">Триллеры</span>
-            </div>
-
-            <div class="movies-grid" id="moviesGrid"></div>
+        <div class="section-header">
+            <h2 class="section-title">Популярные фильмы</h2>
+            <span class="view-all" onclick="showAllMovies()">
+                Все фильмы <i class="fas fa-arrow-right"></i>
+            </span>
         </div>
+        
+        <div class="category-tabs">
+            <span class="category-tab active" onclick="filterMovies('all', this)">Все</span>
+            <span class="category-tab" onclick="filterMovies('action', this)">Боевики</span>
+            <span class="category-tab" onclick="filterMovies('drama', this)">Драмы</span>
+            <span class="category-tab" onclick="filterMovies('fantasy', this)">Фантастика</span>
+            <span class="category-tab" onclick="filterMovies('thriller', this)">Триллеры</span>
+            <span class="category-tab" onclick="filterMovies('family', this)">Семейные</span>
+        </div>
+
+        <div class="movies-grid" id="moviesGrid"></div>
     </div>
 
     <footer class="footer">
@@ -602,14 +740,23 @@
             <span class="close-modal" onclick="closePlayer()">
                 <i class="fas fa-times"></i>
             </span>
-            <video id="myVideo" class="video-js vjs-default-skin" controls preload="auto">
-                <p class="vjs-no-js">Для просмотра видео включите JavaScript</p>
-            </video>
+            <div class="video-container">
+                <div id="youtube-player"></div>
+            </div>
+            <div class="movie-info-modal" id="movieInfoModal">
+                <h2 id="modalMovieTitle">Дюна: Часть вторая</h2>
+                <p id="modalMovieDescription">Пол Атрейдес объединяется с фрименами, чтобы отомстить заговорщикам.</p>
+                <div class="movie-meta-modal">
+                    <span><i class="fas fa-calendar"></i> <span id="modalMovieYear">2024</span></span>
+                    <span><i class="fas fa-clock"></i> 2ч 35мин</span>
+                    <span><i class="fas fa-star"></i> <span id="modalMovieRating">8.9</span></span>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // База фильмов с РАБОЧИМИ видео
+        // YouTube video IDs для фильмов (РЕАЛЬНЫЕ ТРЕЙЛЕРЫ)
         const movies = [
             {
                 id: 'dune2',
@@ -618,16 +765,16 @@
                 rating: 8.9,
                 genre: 'fantasy',
                 age: '16+',
-                quality: '4K',
+                quality: '4K HDR',
                 poster: 'https://image.tmdb.org/t/p/w500/8uVKfOJuh2TvShSqBxV82ZfD9n3.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/8uVKfOJuh2TvShSqBxV82ZfD9n3.jpg',
-                // Это 100% рабочее видео
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-                description: 'Пол Атрейдес объединяется с фрименами, чтобы отомстить заговорщикам.'
+                // Реальный трейлер Дюны 2
+                youtubeId: 'Way9Dexny3w', // Официальный трейлер Дюна 2
+                description: 'Пол Атрейдес объединяется с фрименами, чтобы отомстить заговорщикам и спасти Арракис.'
             },
             {
                 id: 'dune2-trailer',
-                title: 'Дюна 2 - Трейлер',
+                title: 'Дюна 2 - Официальный трейлер',
                 year: 2024,
                 rating: 8.9,
                 genre: 'fantasy',
@@ -635,9 +782,8 @@
                 quality: '4K',
                 poster: 'https://image.tmdb.org/t/p/w500/8uVKfOJuh2TvShSqBxV82ZfD9n3.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/8uVKfOJuh2TvShSqBxV82ZfD9n3.jpg',
-                // Рабочий трейлер
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
-                description: 'Официальный трейлер фильма Дюна 2'
+                youtubeId: 'Way9Dexny3w', // Тот же трейлер
+                description: 'Официальный трейлер фильма Дюна: Часть вторая'
             },
             {
                 id: 'master',
@@ -649,7 +795,7 @@
                 quality: '2K',
                 poster: 'https://image.tmdb.org/t/p/w500/qjfT89fLRI7Kp0TSCxKcHgANLK3.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/qjfT89fLRI7Kp0TSCxKcHgANLK3.jpg',
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                youtubeId: 'g0NZnCgXJ0U', // Трейлер Мастер и Маргарита
                 description: 'Мистическая драма по роману Булгакова.'
             },
             {
@@ -662,7 +808,7 @@
                 quality: '4K',
                 poster: 'https://image.tmdb.org/t/p/w500/sBd3kIjaE3cC0ABL7tC8WvP9FZk.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/sBd3kIjaE3cC0ABL7tC8WvP9FZk.jpg',
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+                youtubeId: 'c0q9Z6dQ8qM', // Трейлер Майор Гром
                 description: 'Майор Гром против новой угрозы.'
             },
             {
@@ -675,21 +821,8 @@
                 quality: '2K',
                 poster: 'https://image.tmdb.org/t/p/w500/8pPxQp1H7cKqM6JzFYv5ZPqZPqZ.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/8pPxQp1H7cKqM6JzFYv5ZPqZPqZ.jpg',
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+                youtubeId: 'dPJRuHj2zQc', // Трейлер Сто лет тому вперед
                 description: 'Путешествие во времени и приключения.'
-            },
-            {
-                id: 'substance',
-                title: 'Субстанция',
-                year: 2024,
-                rating: 8.4,
-                genre: 'thriller',
-                age: '18+',
-                quality: '2K',
-                poster: 'https://image.tmdb.org/t/p/w500/qxU8bH9jKqjqyU0h0h0h0h0h0h0.jpg',
-                backdrop: 'https://image.tmdb.org/t/p/original/qxU8bH9jKqjqyU0h0h0h0h0h0h0.jpg',
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
-                description: 'Психологический триллер.'
             },
             {
                 id: 'interstellar',
@@ -701,22 +834,105 @@
                 quality: '4K HDR',
                 poster: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
-                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
-                description: 'Путешествие через червоточину.'
+                youtubeId: 'zSWdZVtXT7E', // Трейлер Интерстеллар
+                description: 'Путешествие через червоточину в поисках нового дома.'
+            },
+            {
+                id: 'avatar',
+                title: 'Аватар: Путь воды',
+                year: 2024,
+                rating: 8.8,
+                genre: 'fantasy',
+                age: '12+',
+                quality: '4K HDR',
+                poster: 'https://image.tmdb.org/t/p/w500/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg',
+                youtubeId: 'd9MyW72ELq0', // Трейлер Аватар 2
+                description: 'Новая глава истории Пандоры.'
+            },
+            {
+                id: 'oppenheimer',
+                title: 'Оппенгеймер',
+                year: 2024,
+                rating: 8.9,
+                genre: 'drama',
+                age: '18+',
+                quality: '4K',
+                poster: 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg',
+                backdrop: 'https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg',
+                youtubeId: 'uYPbbksJxIg', // Трейлер Оппенгеймер
+                description: 'История создателя атомной бомбы.'
             }
         ];
 
         let player = null;
         let currentMovie = null;
 
-        window.addEventListener('scroll', function() {
-            const header = document.getElementById('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
+        // YouTube API готов
+        function onYouTubeIframeAPIReady() {
+            console.log('YouTube API готов');
+        }
+
+        function openMovie(movieId) {
+            const movie = movies.find(m => m.id === movieId);
+            if (!movie) return;
+
+            currentMovie = movie;
+            const modal = document.getElementById('videoModal');
+            
+            // Обновляем информацию
+            document.getElementById('modalMovieTitle').textContent = movie.title;
+            document.getElementById('modalMovieDescription').textContent = movie.description;
+            document.getElementById('modalMovieYear').textContent = movie.year;
+            document.getElementById('modalMovieRating').textContent = movie.rating;
+
+            // Создаем YouTube плеер
+            if (player) {
+                player.destroy();
             }
-        });
+
+            player = new YT.Player('youtube-player', {
+                videoId: movie.youtubeId,
+                playerVars: {
+                    autoplay: 1,
+                    controls: 1,
+                    rel: 0,
+                    showinfo: 1,
+                    modestbranding: 1,
+                    iv_load_policy: 3,
+                    cc_load_policy: 0,
+                    fs: 1,
+                    playsinline: 1
+                },
+                events: {
+                    onReady: onPlayerReady,
+                    onError: onPlayerError
+                }
+            });
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+        }
+
+        function onPlayerError(event) {
+            console.log('Ошибка YouTube плеера:', event.data);
+            alert('Не удалось загрузить видео. Попробуйте позже.');
+        }
+
+        function closePlayer() {
+            const modal = document.getElementById('videoModal');
+            if (player) {
+                player.pauseVideo();
+                player.destroy();
+                player = null;
+            }
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
 
         function displayMovies(filteredMovies = movies.filter(m => !m.id.includes('trailer'))) {
             const grid = document.getElementById('moviesGrid');
@@ -744,8 +960,7 @@
                         <div class="movie-meta">
                             <span>${movie.year}</span>
                             <span class="movie-rating">
-                                <i class="fas fa-star" style="color: #ffd700;"></i>
-                                ${movie.rating}
+                                <i class="fas fa-star"></i> ${movie.rating}
                             </span>
                         </div>
                     </div>
@@ -763,56 +978,6 @@
             document.getElementById('heroBackdrop').style.backgroundImage = `url('${movie.backdrop}')`;
             document.getElementById('heroTitle').textContent = movie.title;
             document.getElementById('heroDescription').textContent = movie.description;
-        }
-
-        function openMovie(movieId) {
-            const movie = movies.find(m => m.id === movieId);
-            if (!movie) return;
-
-            currentMovie = movie;
-            const modal = document.getElementById('videoModal');
-
-            if (player) {
-                player.dispose();
-            }
-
-            // Создаем новый плеер
-            player = videojs('myVideo', {
-                controls: true,
-                autoplay: true,
-                preload: 'auto',
-                fluid: true,
-                html5: {
-                    hls: {
-                        overrideNative: true
-                    }
-                }
-            });
-
-            // Устанавливаем источник видео
-            player.src({
-                src: movie.videoUrl,
-                type: 'video/mp4'
-            });
-
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-
-            // Обработка ошибок
-            player.on('error', function() {
-                console.log('Ошибка загрузки видео');
-            });
-        }
-
-        function closePlayer() {
-            const modal = document.getElementById('videoModal');
-            if (player) {
-                player.pause();
-                player.dispose();
-                player = null;
-            }
-            modal.classList.remove('active');
-            document.body.style.overflow = 'auto';
         }
 
         function filterMovies(genre, element) {
@@ -853,6 +1018,15 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closePlayer();
+            }
+        });
+
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(10,10,15,0.98)';
+            } else {
+                header.style.background = 'rgba(10,10,15,0.95)';
             }
         });
 
