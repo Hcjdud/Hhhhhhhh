@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineStream 2K - Онлайн кинотеатр премиум качества</title>
+    <!-- Video.js для профессионального плеера с поддержкой 2K/4K -->
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+    <!-- HLS.js для потокового видео высокого качества -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.7/dist/hls.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #0f0f15 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Header с эффектом стекла */
+        .header {
+            background: rgba(18, 18, 24, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 16px 50px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ff4d4d, #f9cb28);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-menu a {
+            color: #e0e0e0;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: #ff4d4d;
+        }
+
+        .nav-menu a.active {
+            color: #ff4d4d;
+        }
+
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(135deg, #ff4d4d, #f9cb28);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 8px 20px;
+            width: 320px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+
+        .search-bar:focus-within {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 77, 77, 0.3);
+            box-shadow: 0 0 20px rgba(255, 77, 77, 0.2);
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: white;
+            width: 100%;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-bar input::placeholder {
+            color: #808080;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff4d4d, #f9cb28);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.3s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        /* Hero Section с параллакс эффектом */
+        .hero {
+            height: 600px;
+            background: linear-gradient(90deg, #0f0f15 0%, rgba(15,15,21,0.7) 50%, transparent 100%),
+                        url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            padding: 0 50px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, transparent 0%, #0f0f15 100%);
+        }
+
+        .hero-content {
+            max-width: 650px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #fff, #e0e0e0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            color: #d0d0d0;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .quality-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 15px;
+            border-radius: 30px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .quality-badge span {
+            background: linear-gradient(135deg, #ff4d4d, #f9cb28);
+            padding: 2px 8px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff4d4d, #ff6b6b);
+            border: none;
+            padding: 16px 45px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(255, 77, 77, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255, 77, 77, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            padding: 16px 45px;
+            border-radius: 50px;
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Категории */
+        .categories {
+            padding: 0 50px;
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #b0b0b0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .view-all {
+            color: #ff4d4d;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .view-all:hover {
+            color: #ff6b6b;
+            transform: translateX(5px);
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .category-tab {
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #b0b0b0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-weight: 500;
+        }
+
+        .category-tab:hover {
+            background: rgba(255, 77, 77, 0.2);
+            border-color: #ff4d4d;
+            color: white;
+        }
+
+        .category-tab.active {
+            background: linear-gradient(135deg, #ff4d4d, #ff6b6b);
+            color: white;
+            border-color: transparent;
+        }
+
+        /* Сетка фильмов */
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 30px;
+            padding: 0 50px;
+            margin-bottom: 60px;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .movie-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 30px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(255, 77, 77, 0.3);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 360px;
+            background: linear-gradient(135deg, #2a2a35, #1a1a24);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s;
+        }
+
+        .movie-card:hover .movie-poster img {
+            transform: scale(1.15);
+        }
+
+        .movie-info {
+            padding: 20px;
+        }
+
+        .movie-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #a0a0a0;
+            font-size: 14px;
+        }
+
+        .movie-rating {
+            color: #f9cb28;
+            font-weight: 600;
+        }
+
+        .movie-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #ff4d4d, #ff6b6b);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+        }
+
+        .quality-tag {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.8);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #f9cb28;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+            z-index: 2;
+        }
+
+        /* Модальное окно с плеером */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 1400px;
+            position: relative;
+        }
+
+        .video-container {
+            width: 100%;
+            position: relative;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .video-js {
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 */
+            background: #000;
+        }
+
+        .video-quality-selector {
+            position: absolute;
+            bottom: 70px;
+            right: 20px;
+            z-index: 100;
+            background: rgba(0,0,0,0.8);
+            border-radius: 8px;
+            padding: 5px;
+            display: flex;
+            gap: 5px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .quality-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .quality-btn:hover {
+            background: rgba(255,77,77,0.3);
+        }
+
+        .quality-btn.active {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+
+        .close-modal:hover {
+            background: #ff4d4d;
+            transform: rotate(90deg);
+        }
+
+        /* Footer */
+        .footer {
+            background: #08080c;
+            padding: 60px 50px 30px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-column h3 {
+            color: #fff;
+            margin-bottom: 25px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-column a {
+            color: #a0a0a0;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 12px;
+            transition: all 0.3s;
+        }
+
+        .footer-column a:hover {
+            color: #ff4d4d;
+            transform: translateX(5px);
+        }
+
+        .copyright {
+            text-align: center;
+            color: #606060;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .header {
+                padding: 16px 30px;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                padding: 0 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .search-bar {
+                display: none;
+            }
+            
+            .hero-title {
+                font-size: 36px;
+            }
+            
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+                padding: 0 20px;
+                gap: 20px;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .movies-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .movie-poster {
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">CineStream 2K</div>
+        <nav class="nav-menu">
+            <a href="#" class="active">Главная</a>
+            <a href="#">Фильмы</a>
+            <a href="#">Сериалы</a>
+            <a href="#">Мультфильмы</a>
+            <a href="#">Подборки</a>
+            <a href="#">Моё</a>
+        </nav>
+        <div class="search-bar">
+            <input type="text" placeholder="Поиск фильмов, сериалов, персон...">
+        </div>
+        <div class="user-menu">
+            <div class="user-avatar">A</div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="quality-badge">
+                <span>2K</span>
+                <span>HDR</span>
+                <span>5.1</span>
+            </div>
+            <h1 class="hero-title">Дюна: Часть вторая</h1>
+            <p class="hero-description">Пол Атрейдес объединяется с фрименами, чтобы отомстить заговорщикам, разрушившим его семью. Эпическое завершение саги в превосходном качестве 2K HDR.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="openPlayer('dune2', '2k')">Смотреть в 2K</button>
+                <button class="btn-secondary">Трейлер</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <div class="section-header">
+            <h2 class="section-title">Популярные жанры</h2>
+            <a href="#" class="view-all">Все жанры →</a>
+        </div>
+        <div class="category-tabs">
+            <span class="category-tab active">Все</span>
+            <span class="category-tab">Боевики</span>
+            <span class="category-tab">Комедии</span>
+            <span class="category-tab">Драмы</span>
+            <span class="category-tab">Фантастика</span>
+            <span class="category-tab">Ужасы</span>
+            <span class="category-tab">Триллеры</span>
+            <span class="category-tab">Мелодрамы</span>
+            <span class="category-tab">Документальные</span>
+        </div>
+    </section>
+
+    <!-- Movies Grid -->
+    <section class="movies-grid" id="moviesGrid">
+        <!-- Фильмы будут добавлены через JavaScript -->
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>О нас</h3>
+                <a href="#">О компании</a>
+                <a href="#">Вакансии</a>
+                <a href="#">Партнёрам</a>
+                <a href="#">Реклама</a>
+                <a href="#">Контакты</a>
+            </div>
+            <div class="footer-column">
+                <h3>Помощь</h3>
+                <a href="#">Поддержка</a>
+                <a href="#">FAQ</a>
+                <a href="#">Пользовательское соглашение</a>
+                <a href="#">Политика конфиденциальности</a>
+                <a href="#">Правила оплаты</a>
+            </div>
+            <div class="footer-column">
+                <h3>Каталог</h3>
+                <a href="#">Новинки</a>
+                <a href="#">Популярное</a>
+                <a href="#">Скоро на сайте</a>
+                <a href="#">Подборки</a>
+                <a href="#">Спецпроекты</a>
+            </div>
+            <div class="footer-column">
+                <h3>Социальные сети</h3>
+                <a href="#">Telegram</a>
+                <a href="#">VK</a>
+                <a href="#">YouTube</a>
+                <a href="#">TikTok</a>
+                <a href="#">Дзен</a>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2025 CineStream 2K. Все права защищены. Лицензионный контент в высоком качестве.
+        </div>
+    </footer>
+
+    <!-- Modal for video player -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closePlayer()">&times;</span>
+            <div class="video-container">
+                <video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto">
+                    <p class="vjs-no-js">
+                        Для просмотра видео включите JavaScript
+                    </p>
+                </video>
+                <div class="video-quality-selector" id="qualitySelector">
+                    <button class="quality-btn active" onclick="setQuality('auto')">Auto</button>
+                    <button class="quality-btn" onclick="setQuality('480p')">480p</button>
+                    <button class="quality-btn" onclick="setQuality('720p')">720p</button>
+                    <button class="quality-btn" onclick="setQuality('1080p')">1080p</button>
+                    <button class="quality-btn" onclick="setQuality('2k')">2K</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Массив с фильмами (поддерживают 2K качество)
+        const movies = [
+            {
+                id: 1,
+                title: 'Дюна: Часть вторая',
+                year: 2024,
+                rating: 8.9,
+                genre: 'Фантастика',
+                age: '16+',
+                quality: '2K HDR',
+                poster: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=300&h=450&fit=crop',
+                videoId: 'dune2',
+                videoSources: {
+                    '480p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '720p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '1080p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '2k': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+                }
+            },
+            {
+                id: 2,
+                title: 'Мастер и Маргарита',
+                year: 2024,
+                rating: 8.5,
+                genre: 'Драма',
+                age: '18+',
+                quality: '2K',
+                poster: 'https://images.unsplash.com/photo-1542204160-126bf60f4b6b?q=80&w=300&h=450&fit=crop',
+                videoId: 'master',
+                videoSources: {
+                    '480p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '720p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '1080p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '2k': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+                }
+            },
+            {
+                id: 3,
+                title: 'Холоп 2',
+                year: 2024,
+                rating: 7.2,
+                genre: 'Комедия',
+                age: '12+',
+                quality: '2K',
+                poster: 'https://images.unsplash.com/photo-1533928298208-27ff66555d8d?q=80&w=300&h=450&fit=crop',
+                videoId: 'kholop2',
+                videoSources: {
+                    '480p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '720p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '1080p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '2k': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+                }
+            },
+            {
+                id: 4,
+                title: 'Бременские музыканты',
+                year: 2024,
+                rating: 7.8,
+                genre: 'Семейный',
+                age: '6+',
+                quality: '2K HDR',
+                poster: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=300&h=450&fit=crop',
+                videoId: 'bremen',
+                videoSources: {
+                    '480p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '720p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '1080p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '2k': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+                }
+            },
+            {
+                id: 5,
+                title: 'Сто лет тому вперёд',
+                year: 2024,
+                rating: 8.2,
+                genre: 'Фантастика',
+                age: '12+',
+                quality: '2K',
+                poster: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=300&h=450&fit=crop',
+                videoId: '100years',
+                videoSources: {
+                    '480p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '720p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '1080p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '2k': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+                }
+            },
+            {
+                id: 6,
+                title: 'Майор Гром: Игра',
+                year: 2024,
+                rating: 8.7,
+                genre: 'Боевик',
+                age: '16+',
+                quality: '2K HDR',
+                poster: 'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?q=80&w=300&h=450&fit=crop',
+                videoId: 'grom',
+                videoSources: {
+                    '480p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '720p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '1080p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '2k': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+                }
+            },
+            {
+                id: 7,
+                title: 'Субстанция',
+                year: 2024,
+                rating: 8.4,
+                genre: 'Ужасы',
+                age: '18+',
+                quality: '2K',
+                poster: 'https://images.unsplash.com/photo-1509248961158-e54f6934749c?q=80&w=300&h=450&fit=crop',
+                videoId: 'substance',
+                videoSources: {
+                    '480p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '720p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '1080p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '2k': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+                }
+            },
+            {
+                id: 8,
+                title: 'Падение империи',
+                year: 2024,
+                rating: 8.1,
+                genre: 'Драма',
+                age: '16+',
+                quality: '2K HDR',
+                poster: 'https://images.unsplash.com/photo-1542204160-126bf60f4b6b?q=80&w=300&h=450&fit=crop',
+                videoId: 'fall',
+                videoSources: {
+                    '480p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '720p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '1080p': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                    '2k': 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8'
+                }
+            }
+        ];
+
+        let player = null;
+        let currentVideoId = null;
+        let currentQuality = 'auto';
+
+        // Функция для отображения фильмов
+        function displayMovies() {
+            const grid = document.getElementById('moviesGrid');
+            grid.innerHTML = '';
+
+            movies.forEach(movie => {
+                const card = document.createElement('div');
+                card.className = 'movie-card';
+                card.onclick = () => openPlayer(movie.videoId, '2k');
+                
+                card.innerHTML = `
+                    <div class="movie-poster">
+                        <img src="${movie.poster}" alt="${movie.title}" loading="lazy">
+                        <span class="movie-badge">${movie.age}</span>
+                        <span class="quality-tag">${movie.quality}</span>
+                    </div>
+                    <div class="movie-info">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <div class="movie-meta">
+                            <span>${movie.year}</span>
+                            <span class="movie-rating">★ ${movie.rating}</span>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Функция для инициализации плеера
+        function initPlayer(videoId, quality) {
+            const movie = movies.find(m => m.videoId === videoId);
+            if (!movie) return;
+
+            const videoElement = document.getElementById('my-video');
+            
+            // Уничтожаем старый плеер если есть
+            if (player) {
+                player.dispose();
+            }
+
+            // Создаём новый плеер с поддержкой высокого качества
+            player = videojs('my-video', {
+                controls: true,
+                autoplay: true,
+                preload: 'auto',
+                responsive: true,
+                fluid: true,
+                playbackRates: [0.5, 1, 1.5, 2],
+                controlBar: {
+                    pictureInPictureToggle: true
+                },
+                html5: {
+                    hls: {
+                        enableLowInitialPlaylist: true,
+                        smoothQualityChange: true,
+                        overrideNative: true
+                    }
+                }
+            });
+
+            // Получаем источник для выбранного качества
+            const source = movie.videoSources[quality] || movie.videoSources['2k'];
+            
+            // Проверяем поддержку HLS
+            if (Hls.isSupported()) {
+                const hls = new Hls({
+                    maxBufferLength: 40,
+                    maxMaxBufferLength: 60,
+                    maxBufferSize: 60 * 1000 * 1000, // 60MB
+                    maxBufferHole: 0.5,
+                    lowLatencyMode: true,
+                });
+                
+                hls.loadSource(source);
+                hls.attachMedia(videoElement);
+                
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    player.play();
+                });
+
+                // Сохраняем hls экземпляр для смены качества
+                player.hls = hls;
+            } else if (videoElement.canPlayType('application/vnd.apple.mpegurl')) {
+                // Для Safari
+                videoElement.src = source;
+                videoElement.addEventListener('loadedmetadata', function() {
+                    player.play();
+                });
+            }
+
+            currentVideoId = videoId;
+            currentQuality = quality;
+
+            // Обновляем активную кнопку качества
+            updateQualityButtons(quality);
+        }
+
+        // Функция для смены качества видео
+        function setQuality(quality) {
+            if (!currentVideoId) return;
+            
+            const movie = movies.find(m => m.videoId === currentVideoId);
+            if (!movie) return;
+
+            const source = movie.videoSources[quality] || movie.videoSources['2k'];
+            
+            if (player && player.hls) {
+                // Меняем качество через HLS.js
+                player.hls.loadSource(source);
+                player.hls.startLoad();
+                currentQuality = quality;
+                updateQualityButtons(quality);
+            }
+        }
+
+        // Обновление активной кнопки качества
+        function updateQualityButtons(quality) {
+            document.querySelectorAll('.quality-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase() === quality.toLowerCase()) {
+                    btn.classList.add('active');
+                } else if (quality === 'auto' && btn.textContent === 'Auto') {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Функция для открытия плеера
+        function openPlayer(videoId, quality = '2k') {
+            const modal = document.getElementById('videoModal');
+            
+            initPlayer(videoId, quality);
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Функция для закрытия плеера
+        function closePlayer() {
+            const modal = document.getElementById('videoModal');
+            
+            if (player) {
+                player.pause();
+                player.dispose();
+                player = null;
+            }
+            
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Закрытие по клику вне плеера
+        window.onclick = function(event) {
+            const modal = document.getElementById('videoModal');
+            if (event.target === modal) {
+                closePlayer();
+            }
+        }
+
+        // Обработка кликов по категориям
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Фильтрация фильмов по жанру (упрощённая)
+                const genre = this.textContent;
+                if (genre === 'Все') {
+                    displayMovies(movies);
+                } else {
+                    const filtered = movies.filter(m => m.genre === genre);
+                    displayMovies(filtered);
+                }
+            });
+        });
+
+        // Обработка клавиши ESC для закрытия модалки
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePlayer();
+            }
+        });
+
+        // Инициализация при загрузке
+        displayMovies();
+
+        // Ленивая загрузка изображений
+        if ('loading' in HTMLImageElement.prototype) {
+            const images = document.querySelectorAll('img[loading="lazy"]');
+            images.forEach(img => {
+                img.src = img.dataset.src;
+            });
+        }
+    </script>
+</body>
+</html>
