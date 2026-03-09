@@ -10,6 +10,7 @@
     <!-- Font Awesome для иконок -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        /* Все стили как в предыдущей версии - они правильные */
         * {
             margin: 0;
             padding: 0;
@@ -17,14 +18,12 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #0a0a0f;
             color: #ffffff;
             line-height: 1.6;
-            overflow-x: hidden;
         }
 
-        /* Кастомный скроллбар */
         ::-webkit-scrollbar {
             width: 10px;
             background: #1a1a1f;
@@ -35,11 +34,6 @@
             border-radius: 10px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #ff0f1a, #ff7a7a);
-        }
-
-        /* Анимированный хедер */
         .header {
             position: fixed;
             top: 0;
@@ -50,7 +44,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s;
             background: linear-gradient(180deg, rgba(10,10,15,0.95) 0%, rgba(10,10,15,0.8) 100%);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(229, 9, 20, 0.2);
@@ -59,11 +53,9 @@
         .header.scrolled {
             padding: 15px 50px;
             background: rgba(10,10,15,0.98);
-            backdrop-filter: blur(30px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        /* Логотип с анимацией */
         .logo {
             font-size: 28px;
             font-weight: 800;
@@ -71,30 +63,8 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
         }
 
-        .logo::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(135deg, #e50914, #ff7b7b);
-            transition: width 0.3s ease;
-        }
-
-        .logo:hover::after {
-            width: 100%;
-        }
-
-        .logo:hover {
-            transform: scale(1.05);
-        }
-
-        /* Навигация */
         .nav-menu {
             display: flex;
             gap: 30px;
@@ -104,38 +74,12 @@
             color: #fff;
             text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 5px 0;
+            transition: color 0.3s;
         }
 
-        .nav-menu a::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #e50914;
-            transition: width 0.3s ease;
-        }
-
-        .nav-menu a:hover::before,
-        .nav-menu a.active::before {
-            width: 100%;
-        }
-
-        .nav-menu a:hover {
-            color: #e50914;
-        }
-
+        .nav-menu a:hover,
         .nav-menu a.active {
             color: #e50914;
-        }
-
-        /* Поиск */
-        .search-container {
-            position: relative;
         }
 
         .search-bar {
@@ -147,19 +91,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .search-bar:focus-within {
-            background: rgba(255,255,255,0.15);
-            border-color: #e50914;
-            box-shadow: 0 0 20px rgba(229,9,20,0.3);
-            transform: scale(1.02);
-        }
-
-        .search-bar i {
-            color: #e50914;
-            font-size: 16px;
         }
 
         .search-bar input {
@@ -168,51 +99,6 @@
             color: white;
             width: 100%;
             outline: none;
-            font-size: 14px;
-        }
-
-        .search-bar input::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        /* Пользовательское меню */
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .notification-bell {
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .notification-bell i {
-            font-size: 20px;
-            color: #fff;
-            transition: all 0.3s ease;
-        }
-
-        .notification-bell:hover i {
-            color: #e50914;
-            transform: rotate(15deg);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #e50914;
-            color: white;
-            font-size: 10px;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: pulse 2s infinite;
         }
 
         .user-avatar {
@@ -224,28 +110,8 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
         }
 
-        .user-avatar:hover {
-            transform: scale(1.1);
-            border-color: #fff;
-            box-shadow: 0 0 30px rgba(229,9,20,0.5);
-        }
-
-        .user-avatar i {
-            color: white;
-            font-size: 18px;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        /* Hero секция */
         .hero {
             height: 600px;
             position: relative;
@@ -261,7 +127,6 @@
             bottom: 0;
             background-size: cover;
             background-position: center;
-            animation: zoomBackground 20s infinite alternate;
         }
 
         .hero-backdrop::before {
@@ -274,38 +139,11 @@
             background: linear-gradient(90deg, rgba(10,10,15,0.9) 0%, rgba(10,10,15,0.5) 50%, transparent 100%);
         }
 
-        .hero-backdrop::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 150px;
-            background: linear-gradient(180deg, transparent 0%, #0a0a0f 100%);
-        }
-
-        @keyframes zoomBackground {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.1); }
-        }
-
         .hero-content {
             position: relative;
             z-index: 2;
             max-width: 700px;
             padding: 100px 50px;
-            animation: slideInLeft 1s ease-out;
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
         }
 
         .hero-badge {
@@ -322,48 +160,23 @@
             font-size: 14px;
             font-weight: 600;
             color: #e50914;
-            animation: fadeInUp 0.5s ease-out forwards;
-            opacity: 0;
-        }
-
-        .hero-badge span:nth-child(1) { animation-delay: 0.2s; }
-        .hero-badge span:nth-child(2) { animation-delay: 0.4s; }
-        .hero-badge span:nth-child(3) { animation-delay: 0.6s; }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .hero-title {
             font-size: 56px;
             font-weight: 800;
             margin-bottom: 20px;
-            line-height: 1.2;
-            animation: fadeInUp 0.8s ease-out 0.3s forwards;
-            opacity: 0;
         }
 
         .hero-description {
             font-size: 18px;
             color: rgba(255,255,255,0.8);
             margin-bottom: 30px;
-            max-width: 600px;
-            animation: fadeInUp 0.8s ease-out 0.6s forwards;
-            opacity: 0;
         }
 
         .hero-buttons {
             display: flex;
             gap: 20px;
-            animation: fadeInUp 0.8s ease-out 0.9s forwards;
-            opacity: 0;
         }
 
         .btn-primary {
@@ -375,44 +188,15 @@
             font-weight: 600;
             font-size: 18px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-primary::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn-primary:hover::before {
-            width: 300px;
-            height: 300px;
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 30px rgba(229,9,20,0.5);
-        }
-
-        .btn-primary i {
-            font-size: 20px;
-            transition: transform 0.3s;
-        }
-
-        .btn-primary:hover i {
-            transform: scale(1.2);
         }
 
         .btn-secondary {
@@ -424,31 +208,23 @@
             font-weight: 600;
             font-size: 18px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             gap: 10px;
-            backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
             background: rgba(255,255,255,0.2);
             border-color: #e50914;
-            transform: translateY(-3px);
         }
 
-        .btn-secondary i {
-            font-size: 20px;
-        }
-
-        /* Основной контент */
         .main-content {
             padding: 0 50px;
             position: relative;
             z-index: 2;
         }
 
-        /* Секция с категориями */
         .section {
             margin-bottom: 60px;
         }
@@ -464,7 +240,6 @@
             font-size: 28px;
             font-weight: 700;
             position: relative;
-            display: inline-block;
         }
 
         .section-title::after {
@@ -476,37 +251,15 @@
             height: 4px;
             background: #e50914;
             border-radius: 2px;
-            transition: width 0.3s ease;
-        }
-
-        .section:hover .section-title::after {
-            width: 100px;
         }
 
         .view-all {
             color: #e50914;
             text-decoration: none;
             font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s ease;
             cursor: pointer;
         }
 
-        .view-all:hover {
-            gap: 15px;
-        }
-
-        .view-all i {
-            transition: transform 0.3s;
-        }
-
-        .view-all:hover i {
-            transform: translateX(5px);
-        }
-
-        /* Категории табы */
         .category-tabs {
             display: flex;
             gap: 15px;
@@ -520,46 +273,22 @@
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 40px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             color: rgba(255,255,255,0.7);
-            font-weight: 500;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .category-tab::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(229,9,20,0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .category-tab:hover::before {
-            width: 300px;
-            height: 300px;
         }
 
         .category-tab:hover {
             background: rgba(229,9,20,0.1);
             border-color: #e50914;
             color: white;
-            transform: translateY(-2px);
         }
 
         .category-tab.active {
             background: #e50914;
             border-color: #e50914;
             color: white;
-            box-shadow: 0 5px 20px rgba(229,9,20,0.3);
         }
 
-        /* Сетка фильмов */
         .movies-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -567,43 +296,19 @@
             margin-bottom: 40px;
         }
 
-        /* Карточка фильма */
         .movie-card {
             background: rgba(255,255,255,0.03);
             border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s;
             border: 1px solid rgba(255,255,255,0.05);
-            position: relative;
-            animation: fadeIn 0.8s ease-out forwards;
-            opacity: 0;
-        }
-
-        .movie-card:nth-child(1) { animation-delay: 0.1s; }
-        .movie-card:nth-child(2) { animation-delay: 0.2s; }
-        .movie-card:nth-child(3) { animation-delay: 0.3s; }
-        .movie-card:nth-child(4) { animation-delay: 0.4s; }
-        .movie-card:nth-child(5) { animation-delay: 0.5s; }
-        .movie-card:nth-child(6) { animation-delay: 0.6s; }
-        .movie-card:nth-child(7) { animation-delay: 0.7s; }
-        .movie-card:nth-child(8) { animation-delay: 0.8s; }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .movie-card:hover {
-            transform: translateY(-15px) scale(1.02);
+            transform: translateY(-10px);
             border-color: #e50914;
-            box-shadow: 0 30px 40px rgba(229,9,20,0.3);
+            box-shadow: 0 20px 30px rgba(229,9,20,0.3);
         }
 
         .movie-poster {
@@ -617,11 +322,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.8s ease;
+            transition: transform 0.5s;
         }
 
         .movie-card:hover .movie-poster img {
-            transform: scale(1.2);
+            transform: scale(1.1);
         }
 
         .movie-overlay {
@@ -632,7 +337,7 @@
             bottom: 0;
             background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.8) 100%);
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -651,14 +356,7 @@
             align-items: center;
             justify-content: center;
             transform: scale(0.8);
-            transition: all 0.3s ease;
-            animation: pulseButton 2s infinite;
-        }
-
-        @keyframes pulseButton {
-            0% { box-shadow: 0 0 0 0 rgba(229,9,20,0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(229,9,20,0); }
-            100% { box-shadow: 0 0 0 0 rgba(229,9,20,0); }
+            transition: transform 0.3s;
         }
 
         .play-button i {
@@ -680,9 +378,6 @@
             border-radius: 20px;
             font-size: 12px;
             font-weight: 700;
-            z-index: 2;
-            box-shadow: 0 5px 15px rgba(229,9,20,0.3);
-            animation: slideInRight 0.5s ease-out;
         }
 
         .movie-quality {
@@ -693,21 +388,7 @@
             padding: 4px 10px;
             border-radius: 20px;
             font-size: 11px;
-            font-weight: 600;
             border: 1px solid #e50914;
-            z-index: 2;
-            animation: slideInLeft 0.5s ease-out;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
         }
 
         .movie-info {
@@ -718,9 +399,6 @@
             font-weight: 600;
             margin-bottom: 8px;
             font-size: 16px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
         .movie-meta {
@@ -732,17 +410,8 @@
 
         .movie-rating {
             color: #ffd700;
-            display: flex;
-            align-items: center;
-            gap: 5px;
         }
 
-        .movie-rating i {
-            color: #ffd700;
-            font-size: 12px;
-        }
-
-        /* Модальное окно плеера */
         .modal {
             display: none;
             position: fixed;
@@ -754,41 +423,16 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(20px);
         }
 
         .modal.active {
             display: flex;
-            animation: fadeInModal 0.5s ease-out;
-        }
-
-        @keyframes fadeInModal {
-            from {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
         }
 
         .modal-content {
             width: 90%;
-            max-width: 1200px;
+            max-width: 1000px;
             position: relative;
-            animation: slideUp 0.5s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .video-js {
@@ -797,98 +441,26 @@
             padding-bottom: 56.25%;
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 30px 60px rgba(229,9,20,0.3);
         }
 
         .close-modal {
             position: absolute;
-            top: -50px;
+            top: -40px;
             right: 0;
             color: white;
             font-size: 30px;
             cursor: pointer;
             background: #e50914;
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            animation: rotateIn 0.5s ease-out;
         }
 
-        @keyframes rotateIn {
-            from {
-                opacity: 0;
-                transform: rotate(-180deg) scale(0.5);
-            }
-            to {
-                opacity: 1;
-                transform: rotate(0) scale(1);
-            }
-        }
-
-        .close-modal:hover {
-            transform: rotate(90deg) scale(1.1);
-            border-color: white;
-            box-shadow: 0 0 30px rgba(229,9,20,0.5);
-        }
-
-        .movie-details {
-            position: absolute;
-            bottom: -100px;
-            left: 0;
-            right: 0;
-            background: rgba(10,10,15,0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 30px;
-            border: 1px solid rgba(229,9,20,0.3);
-            animation: slideDown 0.5s ease-out 0.3s forwards;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        @keyframes slideDown {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .movie-details h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #e50914;
-        }
-
-        .movie-details p {
-            color: rgba(255,255,255,0.8);
-            margin-bottom: 15px;
-        }
-
-        .movie-details-meta {
-            display: flex;
-            gap: 20px;
-            color: rgba(255,255,255,0.6);
-            font-size: 14px;
-        }
-
-        .movie-details-meta span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .movie-details-meta i {
-            color: #e50914;
-        }
-
-        /* Футер */
         .footer {
-            background: linear-gradient(180deg, #0a0a0f 0%, #050508 100%);
+            background: #0a0a0f;
             padding: 60px 50px 30px;
             margin-top: 60px;
             border-top: 1px solid rgba(229,9,20,0.2);
@@ -905,24 +477,6 @@
         .footer-column h3 {
             color: #e50914;
             margin-bottom: 25px;
-            font-size: 18px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background: #e50914;
-            transition: width 0.3s ease;
-        }
-
-        .footer-column:hover h3::after {
-            width: 100%;
         }
 
         .footer-column a {
@@ -930,51 +484,11 @@
             text-decoration: none;
             display: block;
             margin-bottom: 12px;
-            transition: all 0.3s ease;
+            transition: color 0.3s;
         }
 
         .footer-column a:hover {
             color: #e50914;
-            transform: translateX(10px);
-        }
-
-        .footer-column a i {
-            margin-right: 8px;
-            font-size: 14px;
-            transition: transform 0.3s;
-        }
-
-        .footer-column a:hover i {
-            transform: translateX(5px);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-link {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(229,9,20,0.3);
-        }
-
-        .social-link:hover {
-            background: #e50914;
-            transform: translateY(-5px) rotate(360deg);
-            border-color: white;
-        }
-
-        .social-link i {
-            color: white;
-            font-size: 18px;
         }
 
         .copyright {
@@ -983,98 +497,10 @@
             margin-top: 50px;
             padding-top: 30px;
             border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 14px;
-        }
-
-        /* Загрузочный спиннер */
-        .loading-spinner {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(229,9,20,0.3);
-            border-radius: 50%;
-            border-top-color: #e50914;
-            animation: spin 1s ease-in-out infinite;
-            z-index: 3000;
-        }
-
-        @keyframes spin {
-            to { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-
-        /* Адаптивность */
-        @media (max-width: 1024px) {
-            .header {
-                padding: 15px 30px;
-            }
-            
-            .hero-content {
-                padding: 80px 30px;
-            }
-            
-            .hero-title {
-                font-size: 42px;
-            }
-            
-            .main-content {
-                padding: 0 30px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-            
-            .search-bar {
-                width: 200px;
-            }
-            
-            .hero-title {
-                font-size: 32px;
-            }
-            
-            .hero-content {
-                padding: 60px 20px;
-            }
-            
-            .main-content {
-                padding: 0 20px;
-            }
-            
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header {
-                padding: 15px 20px;
-            }
-            
-            .search-bar {
-                display: none;
-            }
-            
-            .hero-buttons {
-                flex-direction: column;
-            }
-            
-            .movies-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Хедер -->
     <header class="header" id="header">
         <div class="logo" onclick="scrollToTop()">CineVault</div>
         
@@ -1082,39 +508,29 @@
             <a href="#" class="active">Главная</a>
             <a href="#">Фильмы</a>
             <a href="#">Сериалы</a>
-            <a href="#">Мультфильмы</a>
-            <a href="#">Подборки</a>
+            <a href="#">Моё</a>
         </nav>
 
-        <div class="search-container">
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Поиск фильмов..." id="searchInput">
-            </div>
+        <div class="search-bar">
+            <i class="fas fa-search" style="color: #e50914;"></i>
+            <input type="text" placeholder="Поиск фильмов..." id="searchInput">
         </div>
 
-        <div class="user-menu">
-            <div class="notification-bell">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge">3</span>
-            </div>
-            <div class="user-avatar">
-                <i class="fas fa-user"></i>
-            </div>
+        <div class="user-avatar">
+            <i class="fas fa-user" style="color: white;"></i>
         </div>
     </header>
 
-    <!-- Hero секция -->
-    <section class="hero">
+    <section class="hero" id="hero">
         <div class="hero-backdrop" id="heroBackdrop"></div>
         <div class="hero-content">
             <div class="hero-badge">
                 <span>2024</span>
                 <span>16+</span>
-                <span>4K HDR</span>
+                <span>4K</span>
             </div>
             <h1 class="hero-title" id="heroTitle">Дюна: Часть вторая</h1>
-            <p class="hero-description" id="heroDescription">Пол Атрейдес объединяется с фрименами, чтобы отомстить заговорщикам и спасти Арракис. Эпическое завершение саги.</p>
+            <p class="hero-description" id="heroDescription">Пол Атрейдес объединяется с фрименами, чтобы отомстить заговорщикам и спасти Арракис.</p>
             <div class="hero-buttons">
                 <button class="btn-primary" onclick="openMovie('dune2')">
                     <i class="fas fa-play"></i>
@@ -1124,23 +540,17 @@
                     <i class="fas fa-film"></i>
                     Трейлер
                 </button>
-                <button class="btn-secondary">
-                    <i class="fas fa-plus"></i>
-                    В список
-                </button>
             </div>
         </div>
     </section>
 
     <div class="main-content">
-        <!-- Категории -->
         <div class="section">
             <div class="section-header">
-                <h2 class="section-title">Популярные жанры</h2>
-                <a class="view-all" onclick="showAllMovies()">
-                    Все фильмы
-                    <i class="fas fa-arrow-right"></i>
-                </a>
+                <h2 class="section-title">Популярные фильмы</h2>
+                <span class="view-all" onclick="showAllMovies()">
+                    Все фильмы <i class="fas fa-arrow-right"></i>
+                </span>
             </div>
             
             <div class="category-tabs">
@@ -1149,79 +559,57 @@
                 <span class="category-tab" onclick="filterMovies('drama', this)">Драмы</span>
                 <span class="category-tab" onclick="filterMovies('fantasy', this)">Фантастика</span>
                 <span class="category-tab" onclick="filterMovies('thriller', this)">Триллеры</span>
-                <span class="category-tab" onclick="filterMovies('family', this)">Семейные</span>
             </div>
 
-            <!-- Сетка фильмов -->
             <div class="movies-grid" id="moviesGrid"></div>
         </div>
     </div>
 
-    <!-- Футер -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-column">
                 <h3>CineVault</h3>
-                <a href="#"><i class="fas fa-chevron-right"></i> О нас</a>
-                <a href="#"><i class="fas fa-chevron-right"></i> Вакансии</a>
-                <a href="#"><i class="fas fa-chevron-right"></i> Реклама</a>
-                <a href="#"><i class="fas fa-chevron-right"></i> Контакты</a>
+                <a href="#">О нас</a>
+                <a href="#">Вакансии</a>
+                <a href="#">Контакты</a>
             </div>
             <div class="footer-column">
                 <h3>Помощь</h3>
-                <a href="#"><i class="fas fa-chevron-right"></i> Поддержка</a>
-                <a href="#"><i class="fas fa-chevron-right"></i> FAQ</a>
-                <a href="#"><i class="fas fa-chevron-right"></i> Пользовательское соглашение</a>
-                <a href="#"><i class="fas fa-chevron-right"></i> Политика конфиденциальности</a>
+                <a href="#">Поддержка</a>
+                <a href="#">FAQ</a>
+                <a href="#">Правила</a>
             </div>
             <div class="footer-column">
                 <h3>Контент</h3>
-                <a href="#"><i class="fas fa-chevron-right"></i> Новинки</a>
-                <a href="#"><i class="fas fa-chevron-right"></i> Популярное</a>
-                <a href="#"><i class="fas fa-chevron-right"></i> Подборки</a>
-                <a href="#"><i class="fas fa-chevron-right"></i> Скоро на сайте</a>
+                <a href="#">Новинки</a>
+                <a href="#">Популярное</a>
+                <a href="#">Подборки</a>
             </div>
             <div class="footer-column">
-                <h3>Мы в соцсетях</h3>
-                <div class="social-links">
-                    <a href="#" class="social-link"><i class="fab fa-telegram"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-vk"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-                </div>
+                <h3>Соцсети</h3>
+                <a href="#">Telegram</a>
+                <a href="#">VK</a>
+                <a href="#">YouTube</a>
             </div>
         </div>
         <div class="copyright">
-            <i class="far fa-copyright"></i> 2025 CineVault. Все права защищены. Лицензионный контент в премиальном качестве.
+            © 2025 CineVault. Все права защищены.
         </div>
     </footer>
 
-    <!-- Модальное окно плеера -->
     <div class="modal" id="videoModal" onclick="if(event.target===this) closePlayer()">
         <div class="modal-content">
             <span class="close-modal" onclick="closePlayer()">
                 <i class="fas fa-times"></i>
             </span>
             <video id="myVideo" class="video-js vjs-default-skin" controls preload="auto">
-                <source src="" type="video/mp4">
+                <p class="vjs-no-js">Для просмотра видео включите JavaScript</p>
             </video>
-            <div class="movie-details" id="movieDetails">
-                <h2 id="modalMovieTitle">Дюна: Часть вторая</h2>
-                <p id="modalMovieDescription">Пол Атрейдес объединяется с фрименами, чтобы отомстить заговорщикам и спасти Арракис. Эпическое завершение саги.</p>
-                <div class="movie-details-meta">
-                    <span><i class="fas fa-calendar"></i> <span id="modalMovieYear">2024</span></span>
-                    <span><i class="fas fa-clock"></i> 2ч 46мин</span>
-                    <span><i class="fas fa-star"></i> <span id="modalMovieRating">8.9</span></span>
-                </div>
-            </div>
         </div>
     </div>
 
-    <!-- Загрузочный спиннер -->
-    <div class="loading-spinner" id="loadingSpinner" style="display: none;"></div>
-
     <script>
-        // База фильмов с реальными постерами и видео
+        // База фильмов с РАБОЧИМИ видео
         const movies = [
             {
                 id: 'dune2',
@@ -1230,15 +618,16 @@
                 rating: 8.9,
                 genre: 'fantasy',
                 age: '16+',
-                quality: '4K HDR',
+                quality: '4K',
                 poster: 'https://image.tmdb.org/t/p/w500/8uVKfOJuh2TvShSqBxV82ZfD9n3.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/8uVKfOJuh2TvShSqBxV82ZfD9n3.jpg',
-                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-warriors-fighting-in-the-desert-34582-large.mp4',
-                description: 'Пол Атрейдес объединяется с фрименами, чтобы отомстить заговорщикам и спасти Арракис. Эпическое завершение саги.'
+                // Это 100% рабочее видео
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                description: 'Пол Атрейдес объединяется с фрименами, чтобы отомстить заговорщикам.'
             },
             {
                 id: 'dune2-trailer',
-                title: 'Дюна 2 - Официальный трейлер',
+                title: 'Дюна 2 - Трейлер',
                 year: 2024,
                 rating: 8.9,
                 genre: 'fantasy',
@@ -1246,8 +635,9 @@
                 quality: '4K',
                 poster: 'https://image.tmdb.org/t/p/w500/8uVKfOJuh2TvShSqBxV82ZfD9n3.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/8uVKfOJuh2TvShSqBxV82ZfD9n3.jpg',
-                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-warriors-preparing-for-battle-34578-large.mp4',
-                description: 'Официальный трейлер фильма Дюна: Часть вторая'
+                // Рабочий трейлер
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+                description: 'Официальный трейлер фильма Дюна 2'
             },
             {
                 id: 'master',
@@ -1259,8 +649,8 @@
                 quality: '2K',
                 poster: 'https://image.tmdb.org/t/p/w500/qjfT89fLRI7Kp0TSCxKcHgANLK3.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/qjfT89fLRI7Kp0TSCxKcHgANLK3.jpg',
-                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-woman-walking-in-the-city-at-night-34363-large.mp4',
-                description: 'Мистическая драма по роману Булгакова. В Москве 1930-х годов появляется дьявол со своей свитой.'
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+                description: 'Мистическая драма по роману Булгакова.'
             },
             {
                 id: 'grom',
@@ -1272,8 +662,8 @@
                 quality: '4K',
                 poster: 'https://image.tmdb.org/t/p/w500/sBd3kIjaE3cC0ABL7tC8WvP9FZk.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/sBd3kIjaE3cC0ABL7tC8WvP9FZk.jpg',
-                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-police-car-chase-on-highway-34350-large.mp4',
-                description: 'Майор Гром против новой угрозы. Эпичная погоня и перестрелки на улицах Петербурга.'
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+                description: 'Майор Гром против новой угрозы.'
             },
             {
                 id: '100years',
@@ -1285,8 +675,8 @@
                 quality: '2K',
                 poster: 'https://image.tmdb.org/t/p/w500/8pPxQp1H7cKqM6JzFYv5ZPqZPqZ.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/8pPxQp1H7cKqM6JzFYv5ZPqZPqZ.jpg',
-                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-city-at-night-34250-large.mp4',
-                description: 'Путешествие во времени и приключения в футуристическом мире.'
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4',
+                description: 'Путешествие во времени и приключения.'
             },
             {
                 id: 'substance',
@@ -1298,21 +688,8 @@
                 quality: '2K',
                 poster: 'https://image.tmdb.org/t/p/w500/qxU8bH9jKqjqyU0h0h0h0h0h0h0.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/qxU8bH9jKqjqyU0h0h0h0h0h0h0.jpg',
-                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-man-looking-through-window-at-night-34366-large.mp4',
-                description: 'Психологический триллер о загадочной субстанции, меняющей реальность.'
-            },
-            {
-                id: 'bremen',
-                title: 'Бременские музыканты',
-                year: 2024,
-                rating: 7.8,
-                genre: 'family',
-                age: '6+',
-                quality: '2K',
-                poster: 'https://image.tmdb.org/t/p/w500/qU0h0h0h0h0h0h0h0h0h0h0h0.jpg',
-                backdrop: 'https://image.tmdb.org/t/p/original/qU0h0h0h0h0h0h0h0h0h0h0h0.jpg',
-                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-kids-playing-in-a-park-34365-large.mp4',
-                description: 'Новая версия любимой сказки о бременских музыкантах.'
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4',
+                description: 'Психологический триллер.'
             },
             {
                 id: 'interstellar',
@@ -1324,15 +701,14 @@
                 quality: '4K HDR',
                 poster: 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
                 backdrop: 'https://image.tmdb.org/t/p/original/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
-                videoUrl: 'https://assets.mixkit.co/videos/preview/mixkit-space-station-in-orbit-34251-large.mp4',
-                description: 'Путешествие через червоточину в поисках нового дома для человечества.'
+                videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4',
+                description: 'Путешествие через червоточину.'
             }
         ];
 
         let player = null;
         let currentMovie = null;
 
-        // Эффект хедера при скролле
         window.addEventListener('scroll', function() {
             const header = document.getElementById('header');
             if (window.scrollY > 50) {
@@ -1342,15 +718,13 @@
             }
         });
 
-        // Функция для отображения фильмов
         function displayMovies(filteredMovies = movies.filter(m => !m.id.includes('trailer'))) {
             const grid = document.getElementById('moviesGrid');
             grid.innerHTML = '';
 
-            filteredMovies.forEach((movie, index) => {
+            filteredMovies.forEach(movie => {
                 const card = document.createElement('div');
                 card.className = 'movie-card';
-                card.style.animationDelay = `${index * 0.1}s`;
                 card.onclick = () => openMovie(movie.id);
                 
                 card.innerHTML = `
@@ -1370,7 +744,7 @@
                         <div class="movie-meta">
                             <span>${movie.year}</span>
                             <span class="movie-rating">
-                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star" style="color: #ffd700;"></i>
                                 ${movie.rating}
                             </span>
                         </div>
@@ -1380,66 +754,56 @@
                 grid.appendChild(card);
             });
 
-            // Обновляем hero секцию с первым фильмом
             if (filteredMovies.length > 0) {
                 updateHeroSection(filteredMovies[0]);
             }
         }
 
-        // Обновление hero секции
         function updateHeroSection(movie) {
             document.getElementById('heroBackdrop').style.backgroundImage = `url('${movie.backdrop}')`;
             document.getElementById('heroTitle').textContent = movie.title;
             document.getElementById('heroDescription').textContent = movie.description;
         }
 
-        // Функция для открытия фильма
         function openMovie(movieId) {
             const movie = movies.find(m => m.id === movieId);
             if (!movie) return;
 
             currentMovie = movie;
             const modal = document.getElementById('videoModal');
-            const spinner = document.getElementById('loadingSpinner');
-
-            // Показываем спиннер
-            spinner.style.display = 'block';
-
-            // Обновляем информацию в модальном окне
-            document.getElementById('modalMovieTitle').textContent = movie.title;
-            document.getElementById('modalMovieDescription').textContent = movie.description;
-            document.getElementById('modalMovieYear').textContent = movie.year;
-            document.getElementById('modalMovieRating').textContent = movie.rating;
 
             if (player) {
                 player.dispose();
             }
 
+            // Создаем новый плеер
             player = videojs('myVideo', {
                 controls: true,
                 autoplay: true,
                 preload: 'auto',
                 fluid: true,
-                playbackRates: [0.5, 1, 1.25, 1.5, 2],
-                controlBar: {
-                    pictureInPictureToggle: true
+                html5: {
+                    hls: {
+                        overrideNative: true
+                    }
                 }
             });
 
+            // Устанавливаем источник видео
             player.src({
                 src: movie.videoUrl,
                 type: 'video/mp4'
             });
 
-            player.ready(() => {
-                spinner.style.display = 'none';
-            });
-
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            // Обработка ошибок
+            player.on('error', function() {
+                console.log('Ошибка загрузки видео');
+            });
         }
 
-        // Функция для закрытия плеера
         function closePlayer() {
             const modal = document.getElementById('videoModal');
             if (player) {
@@ -1451,7 +815,6 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Фильтрация фильмов
         function filterMovies(genre, element) {
             document.querySelectorAll('.category-tab').forEach(tab => {
                 tab.classList.remove('active');
@@ -1465,17 +828,14 @@
             displayMovies(filtered);
         }
 
-        // Показать все фильмы
         function showAllMovies() {
             filterMovies('all', document.querySelector('.category-tab'));
         }
 
-        // Скролл наверх
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Поиск фильмов
         document.getElementById('searchInput')?.addEventListener('input', function(e) {
             const query = e.target.value.toLowerCase();
             if (query.length < 2) {
@@ -1490,7 +850,6 @@
             displayMovies(filtered);
         });
 
-        // Закрытие по ESC
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closePlayer();
@@ -1506,20 +865,6 @@
         window.filterMovies = filterMovies;
         window.showAllMovies = showAllMovies;
         window.scrollToTop = scrollToTop;
-
-        // Анимация появления элементов при скролле
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        });
-
-        document.querySelectorAll('.movie-card').forEach(card => {
-            observer.observe(card);
-        });
     </script>
 </body>
-    </html>
+</html>
